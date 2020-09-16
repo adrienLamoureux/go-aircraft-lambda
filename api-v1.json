@@ -1,0 +1,534 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Aircraft API",
+        "version": "1.0",
+        "description": "The RESTful aircraft service."
+    },
+    "servers": [
+        {
+            "url": "http://localhost:7200/api",
+            "description": "The local api server."
+        }
+    ],
+    "components": {
+        "schemas": {
+            "PortfolioInfo": {
+                "type": "object",
+                "description": "Portfolio information.",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The portfolio ID."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "The portfolio name."
+                    },
+                    "aircraftIds": {
+                        "type": "array",
+                        "description": "The list of aircraft ID related to the portfolio.",
+                        "items": {
+                            "type": "string",
+                            "description": "The aircraft ID."
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/aircraft": {
+            "post": {
+                "operationId": "CreateAircraft",
+                "summary": "Create Aircraft Information",
+                "description": "Create a new Aircraft.",
+                "tags": ["aircraft"],
+                "requestBody": {
+                    "description": "The create an aircraft request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "model": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["id", "model"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the aircraft.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/portfolios": {
+            "get": {
+                "operationId": "GetPortfolioList",
+                "summary": "Get Portfolios Information",
+                "description": "Retrievs informations of all portfolios.",
+                "tags": ["portfolio"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully returned the portfolios information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "portfolios": {
+                                            "type": "array",
+                                            "items":{
+                                                "$ref": "#/components/schemas/PortfolioInfo"
+                                            }
+                                        }
+                                    }
+                                   
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/portfolio": {
+            "post": {
+                "operationId": "CreatePortfolio",
+                "summary": "Create Portfolio Information",
+                "description": "Create a new Portfolio.",
+                "tags": ["portfolio"],
+                "requestBody": {
+                    "description": "The create a portfolio model request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["name"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the portfolio.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/portfolio/{portfolioId}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "portfolioId",
+                    "description": "The portfolio ID.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "operationId": "GetPortfolio",
+                "summary": "Get Portfolio Information",
+                "description": "Retrievs informations for a specific portfolio.",
+                "tags": ["portfolio"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully returned the portfolio information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PortfolioInfo"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "DeletePortfolio",
+                "summary": "Delete Portfolio Information",
+                "description": "Delete informations for a specific portfolio.",
+                "tags": ["portfolio"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the portfolio information."
+                    }
+                }
+            }
+        },
+        "/portfolio/{portfolioId}/aircraft": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "portfolioId",
+                    "description": "The portfolio ID.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "post": {
+                "operationId": "CreatePortfolioAircraft",
+                "summary": "Create Portfolio Aircraft Information",
+                "description": "Link an existing aircraft to a specific portfolio.",
+                "tags": ["portfolio"],
+                "requestBody": {
+                    "description": "The create a portfolio aircraft request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "aircraftId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["aircraftId"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the portfolio aircraft."
+                    }
+                }
+            }
+        },
+        "/portfolio/{portfolioId}/aircraft/{aircraftId}": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "portfolioId",
+                    "description": "The portfolio ID.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "in": "path",
+                    "name": "aircraftId",
+                    "description": "The aircraft ID.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "delete": {
+                "operationId": "DeletePortfolioAircraft",
+                "summary": "Delete Portfolio Aircraft Information",
+                "description": "Unlink an existing aircraft to a specific portfolio.",
+                "tags": ["portfolio"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully deleted the portfolio aircraft."
+                    }
+                }
+            }
+        },
+        "/portfolio/{portfolioId}/flightMetrics": {
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "portfolioId",
+                    "description": "The portfolio ID.",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "in": "query",
+                    "name": "duration",
+                    "description": "The duration in hours",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "get": {
+                "operationId": "GetPortfolioFlightMetrics",
+                "summary": "Get Portfolio Flight Metrics",
+                "description": "Get flight metrics to a specific portfolio.",
+                "tags": ["metric"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully got the portfolio flight metrics.",
+                        "content":{
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "aircrafts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "aircraftId":{
+                                                        "type": "string",
+                                                        "description": "The aircraft Id"
+                                                    },
+                                                    "aircraftModel":{
+                                                        "type":"string",
+                                                        "description":"The aircraft model"
+                                                    },
+                                                    "flightCount":{
+                                                        "type":"integer",
+                                                        "description":"The number of flights"
+                                                    },
+                                                    "flightTime":{
+                                                        "type":"number",
+                                                        "description":"The total hours of flights"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/aircraftModel": {
+            "post": {
+                "operationId": "CreateAircraftModel",
+                "summary": "Create AircraftModel Information",
+                "description": "Create a new Aircraft Model.",
+                "tags": ["aircraft"],
+                "requestBody": {
+                    "description": "The create an aircraft model request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "model": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["model"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the aircraft information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/airport": {
+            "post": {
+                "operationId": "CreateAirport",
+                "summary": "Create Airport Information",
+                "description": "Create a new Airport.",
+                "tags": ["airport"],
+                "requestBody": {
+                    "description": "The create an airport request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "airportId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["airportId"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the airport information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "airportId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/flight": {
+            "post": {
+                "operationId": "CreateFlight",
+                "summary": "Create Flight Information",
+                "description": "Create a new Flight.",
+                "tags": ["flight"],
+                "requestBody": {
+                    "description": "The create a flight request information.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "flight_number": {
+                                        "type": "string",
+                                        "description": "The flight Id"
+                                    },
+                                    "registration": {
+                                        "type": "string",
+                                        "description": "The aircraft Id"
+                                    },
+                                    "departure_airport": {
+                                        "type": "string",
+                                        "description": "The IATA code of the flight departure airport"
+                                    },
+                                    "departure_timestamp": {
+                                        "type": "integer",
+                                        "description": "The departure Epoch Time (seconds) of the flight"
+                                    },
+                                    "arrival_airport": {
+                                        "type": "string",
+                                        "description": "The IATA code of the flight arrival airport"
+                                    },
+                                    "arrival_timestamp": {
+                                        "type": "integer",
+                                        "description": "The arrival Epoch Time (seconds) of the flight"
+                                    }
+                                },
+                                "required": ["flight_number", "registration", "departure_airport", "departure_timestamp", "arrival_airport", "arrival_timestamp"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully created the flight information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "flightId": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/flightMetrics": {
+            "parameters": [
+                {
+                    "in": "query",
+                    "name": "duration",
+                    "description": "The duration in hours",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "get": {
+                "operationId": "GetFlightMetricsAircraftModel",
+                "summary": "Get Flight Metrics Aircraft Model Information",
+                "description": "Get Flight Metrics for each Aircraft Model.",
+                "tags": ["metric"],
+                "responses": {
+                    "200": {
+                        "description": "Successfully got the flight metric per aircraft model information.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "aircraftModels": {
+                                            "type": "array",
+                                            "items":{
+                                                "type": "object",
+                                                "properties": {
+                                                    "aircraftModel": {
+                                                        "type": "string",
+                                                        "description": "The aircraft model"
+                                                    },
+                                                    "flightCount": {
+                                                        "type": "integer",
+                                                        "description": "The number of flights"
+                                                    },
+                                                    "flightTime": {
+                                                        "type": "number",
+                                                        "description": "The total hours of flights"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
